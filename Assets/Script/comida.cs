@@ -4,68 +4,39 @@ using UnityEngine;
 
 public class comida : MonoBehaviour
 {
-    public GameObject[] cubes;
     public int currentIndex;
+    public float minX = 1f;  // Valor mínimo en el eje X
+    public float maxX = 15f; // Valor máximo en el eje X
+    public float ySpawn = 20f; // Posición fija en el eje Y
+    public GameObject[] prefabsToShoot; // Array de prefabs a disparar
+
     void Start()
     {
-        DeactivateAll();
+        Shoot();
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.LeftArrow))
+        
+    }
+
+
+    void Shoot()
+    {
+        if (prefabsToShoot.Length > 0)
         {
-            if (currentIndex < cubes.Length)
-            {
-                DeactivateAll();
-                ActivateByIndex(currentIndex);
-                currentIndex++;
-            }
-            else
-            {
-                currentIndex = 0;
-                DeactivateAll();
-                ActivateByIndex(currentIndex);
-                currentIndex++;
-            }
+            int randomIndex = Random.Range(0, prefabsToShoot.Length);
+            GameObject prefabToInstantiate = prefabsToShoot[randomIndex];
+            float randomX = Random.Range(minX, maxX);
+            Vector3 spawnPosition = new Vector3(randomX, ySpawn, 0f);
+            Instantiate(prefabToInstantiate, spawnPosition, Quaternion.identity);
         }
-        if (Input.GetKeyDown(KeyCode.RightArrow))
+        else
         {
-            if (currentIndex >= 0)
-            {
-                DeactivateAll();
-                ActivateByIndex(currentIndex);
-                currentIndex--;
-            }
-            else
-            {
-                currentIndex = cubes.Length - 1;
-                DeactivateAll();
-                ActivateByIndex(currentIndex);
-                currentIndex--;
-            }
+            Debug.LogWarning("No se han asignado prefabs a prefabsToShoot en el Inspector.");
         }
     }
 
-    void DeactivateAll()
-    {
-        for (int i = 0; i < cubes.Length; i++)
-        {
-            cubes[i].SetActive(false);
-        }
-    }
 
-    void ActivateAll()
-    {
-        for (int i = 0; i < cubes.Length; i++)
-        {
-            cubes[i].SetActive(true);
-        }
-    }
-
-    void ActivateByIndex(int index)
-    {
-        cubes[index].SetActive(true);
-    }
 }
